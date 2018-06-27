@@ -1,0 +1,28 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@polymer/lit-element": "^0.5.2",
+    "@webcomponents/webcomponentsjs": "^2.0.2",
+    "auth0-js": "^9.6.1",
+    "cli": "^1.0.1",
+    "pwa-helpers": "^0.8.2",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0",
+    "webpack": "^4.12.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.0.8",
+    "polymer-cli": "^1.7.0-pre.17"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack_dev": "webpack --config webpack.dev.conf.js",
+    "serve": "polymer serve",
+    "start": "npm run-script webpack_dev && npm run-script serve"
+  },
+  "author": "",
+  "license": "ISC"
+}
