@@ -29,8 +29,7 @@ verifyOptions: {
 ```
 
 Need to use this repo:
-```https://github.com/clarkie/node-jwks-rsa/
-```
+`https://github.com/clarkie/node-jwks-rsa/`
 For JWT to work in Hapi 17.
 
 Run:
