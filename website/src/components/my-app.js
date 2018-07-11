@@ -1,10 +1,8 @@
-import { LitElement, html } from '@polymer/lit-element';
-
+import {LitElement, html} from '@polymer/lit-element';
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import {store} from '../store.js';
 import './my-list.js';
 import './auth0-login.js';
-
-import { connect } from 'pwa-helpers/connect-mixin.js';
-import { store } from '../store.js';
 
 import {
   addItem,
@@ -15,17 +13,12 @@ import {
 } from '../actions/app.js';
 
 class MyApp extends connect(store)(LitElement) {
-
-  constructor() {
-      super();
-  }
-
-  static get properties(){
+  static get properties() {
     return {
-      _count : Number,
-      _signedIn : Boolean,
-      _items : Array,
-    }
+      _count: Number,
+      _signedIn: Boolean,
+      _items: Array,
+    };
   }
 
   _render(properties) {
@@ -33,9 +26,9 @@ class MyApp extends connect(store)(LitElement) {
       Todo list (${properties._count})
 
       <auth0-login
-        domain="auth0.com"
-        clientid="abc"
-        audience="http://localhost:3000"
+        domain="alien-go-home.auth0.com"
+        clientid="NQipGcpZsGn0CEpJPbVFoKZDY0I7WuVP"
+        audience="https://micro-blog-app"
         scope="openid profile"
         responsetype="token id_token"
         on-user-login="${(e) => this._userLogin(e)}"
@@ -43,33 +36,30 @@ class MyApp extends connect(store)(LitElement) {
       ></auth0-login>
 
       <div hidden="${!properties._signedIn}">
-
         <my-list items="${properties._items}"
           on-delete-entry="${(e) => this._deleteEntry(e)}"
           on-add-entry="${(e) => this._addEntry(e)}"
         ></my-list>
-
       </div>
-
 
       <script type="text/javascript" src="../../node_modules/auth0-js/build/auth0.js"></script>
     `;
   }
 
-  _deleteEntry(e){
+  _deleteEntry(e) {
     store.dispatch(deleteItem(e.detail));
   }
 
-  _addEntry(e){
+  _addEntry(e) {
     store.dispatch(addItem(e.detail));
   }
 
-  _userLogin(e){
+  _userLogin(e) {
     store.dispatch(userLogin(e.detail));
     store.dispatch(getInitialData(e.detail));
   }
 
-  _userLogout(){
+  _userLogout() {
     store.dispatch(userLogout());
   }
 
@@ -79,7 +69,7 @@ class MyApp extends connect(store)(LitElement) {
     this._items = state.items;
   }
 
-  _firstRendered(){
+  _firstRendered() {
     super._firstRendered();
     store.dispatch(getInitialData());
   }

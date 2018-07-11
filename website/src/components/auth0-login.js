@@ -1,40 +1,35 @@
-import { LitElement, html } from '@polymer/lit-element';
+import {LitElement, html} from '@polymer/lit-element';
 
 let auth0 = require('../../node_modules/auth0-js/build/auth0.js');
 
 class Auth0Login extends LitElement {
-
-  constructor() {
-      super();
-  }
-
-  static get properties(){
+  static get properties() {
     return {
-      _auth : Object,
-      _user : Object,
-      audience : String,
-      clientid : String,
-      audience : String,
-      responsetype : String,
-      scope : String,
-      domain : String,
-    }
+      _auth: Object,
+      _user: Object,
+      audience: String,
+      clientid: String,
+      audience: String,
+      responsetype: String,
+      scope: String,
+      domain: String,
+    };
   }
 
   _render(properties) {
     return html`
-    <button hidden?="${properties._user != null}" on-click="${() => this.login()}">Login</button>
-    <button hidden?="${properties._user == null}" on-click="${() => this.logout()}">Logout</button>
+      <button hidden?="${properties._user != null}" on-click="${() => this.login()}">Login</button>
+      <button hidden?="${properties._user == null}" on-click="${() => this.logout()}">Logout</button>
     `;
   }
 
-  login(){
+  login() {
     this._auth.authorize();
   }
 
-  _getProfile(){
+  _getProfile() {
     this._auth.client.userInfo(this._user.accessToken, (err, profile) => {
-      this.dispatchEvent(new CustomEvent('user-login', {detail : profile}));
+      this.dispatchEvent(new CustomEvent('user-login', {detail: profile}));
     });
   }
 
@@ -44,15 +39,13 @@ class Auth0Login extends LitElement {
         window.location.hash = '';
         this._setSession(authResult);
         this._user = authResult;
-        if(!this.isAuthenticated()){
-        }
         this._getProfile();
-      }else{
-        if(this.isAuthenticated()){
+      } else {
+        if (this.isAuthenticated()) {
           this._user = {
-            accessToken : localStorage.getItem('access_token'),
-            idToken     : localStorage.getItem('id_token'),
-            expiresAt   : localStorage.getItem('expires_at'),
+            accessToken: localStorage.getItem('access_token'),
+            idToken: localStorage.getItem('id_token'),
+            expiresAt: localStorage.getItem('expires_at'),
           };
           this._getProfile();
         }
@@ -60,7 +53,7 @@ class Auth0Login extends LitElement {
     });
   }
 
-  _firstRendered(){
+  _firstRendered() {
     super._firstRendered();
     this._auth = new auth0.WebAuth({
       domain: this.domain,
@@ -74,7 +67,7 @@ class Auth0Login extends LitElement {
   }
 
   _setSession(authResult) {
-    var expiresAt = JSON.stringify(
+    const expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime()
     );
     localStorage.setItem('access_token', authResult.accessToken);
@@ -94,7 +87,6 @@ class Auth0Login extends LitElement {
     var expiresAt = JSON.parse(localStorage.getItem('expires_at'));
     return new Date().getTime() < expiresAt;
   }
-
 }
 
 window.customElements.define('auth0-login', Auth0Login);
