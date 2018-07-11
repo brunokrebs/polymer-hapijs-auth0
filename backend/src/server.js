@@ -1,17 +1,14 @@
-const Hapi    = require('hapi');
+const Hapi = require('hapi');
 const jwksRsa = require('jwks-rsa');
 
-const validateFunc = async function (decoded, request) {
-
-  //Demo app
+const validateFunc = async (decoded) => {
   return {
-    isValid: true
+    isValid: true,
+    credentials: decoded,
   };
-
 };
 
 module.exports = async (serverOptions, options) => {
-
   const server = Hapi.server(
     Object.assign({
       port: 3001,
@@ -21,51 +18,48 @@ module.exports = async (serverOptions, options) => {
           origin: ['*']
         }
       }
-    },serverOptions)
+    }, serverOptions)
   );
 
   // Redirect to SSL
-  if(options.enableSSL) {
+  if (options.enableSSL) {
     console.log('Setting SSL');
     await server.register({plugin: require('hapi-require-https')});
-  }else{
+  } else {
     console.log('Not setting SSL');
   }
 
-  await server.register(
-    [
-      require('vision'),
-      require('inert'),
-      {
-        plugin: require('lout'),
-        options: {
-          endpoint : '/docs'
-        }
-      },
-      {
-        plugin: require('good'),
-        options : {
-          ops: {
-              interval: 1000
-          },
-          reporters: {
-              consoleReporter:
-              [
-                {
-                  module: 'good-squeeze',
-                  name: 'Squeeze',
-                  args: [{ response: '*' }]
-                },
-                {
-                  module: 'good-console'
-                },
-                'stdout'
-              ]
-          }
+  await server.register([
+    require('vision'),
+    require('inert'),
+    {
+      plugin: require('lout'),
+      options: {
+        endpoint: '/docs'
+      }
+    },
+    {
+      plugin: require('good'),
+      options: {
+        ops: {
+          interval: 1000
+        },
+        reporters: {
+          consoleReporter: [
+            {
+              module: 'good-squeeze',
+              name: 'Squeeze',
+              args: [{response: '*'}]
+            },
+            {
+              module: 'good-console'
+            },
+            'stdout'
+          ],
         }
       }
-    ]
-  );
+    }
+  ]);
 
   await server.register(require('hapi-auth-jwt2'));
 
@@ -90,4 +84,4 @@ module.exports = async (serverOptions, options) => {
   server.route(require('./routes.js'));
 
   return server;
-}
+};
