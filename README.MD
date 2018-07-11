@@ -1,38 +1,20 @@
-#How to start projects:
+# Polymer, HapiJS, and Auth0
 
-##Backend:
+## Backend
 
-Make .env file:
+Make a `./backend/.env` file (you can also copy it from [`./backend/.env.template`](./backend/.env.template)):
 
 ```sh
-PORT=3000
+AUTH0_AUDIENCE=http://localhost:3000
+AUTH0_DOMAIN=snapkicks.eu.auth0.com
 HOST=localhost
-SSL=false
+PORT=3000
 REDIS_HOST=localhost
-REDIS_PORT 6379
+REDIS_PORT=6379
+SSL=false
 ```
 
-Setup Auth0 details in `src/server.js`:
-
-```
-key: jwksRsa.hapiJwt2Key({
-  cache: true,
-  rateLimit: true,
-  jwksRequestsPerMinute: 5,
-  jwksUri: "auth0.com/.well-known/jwks.json"
-}),
-verifyOptions: {
-  audience: 'API_NAME',
-  issuer: "auth0.com/",
-  algorithms: ['RS256']
-},
-```
-
-Need to use this repo:
-`https://github.com/clarkie/node-jwks-rsa/`
-For JWT to work in Hapi 17.
-
-Run:
+Then, replace the values on this file with your own Auth0 config values. After that, you can run the backend with these commands:
 
 ```sh
 npm install
@@ -40,8 +22,7 @@ docker-compose up -d
 npm start
 ```
 
-
-##Website:
+## Website:
 
 Need to set Auth0 params in `src/components/my-app.js`:
 

@@ -1,8 +1,8 @@
-require('node-env-file')('./.env');
+require('node-env-file')(__dirname + '/.env');
 
-const redis        = require('redis');
+const redis = require('redis');
 const createServer = require('./src/server.js');
-const {promisify}  = require('util');
+const {promisify} = require('util');
 const start = async () => {
 
   const server = await createServer(
@@ -11,22 +11,22 @@ const start = async () => {
       host: process.env.HOST
     },
     {
-      enableSSL: process.env.SSL == 'true'
+      enableSSL: process.env.SSL === 'true'
     }
   );
 
   const redisClient = redis.createClient(
     {
-      host : process.env.REDIS_HOST,
-      port : process.env.REDIS_PORT,
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
     }
   );
 
-  redisClient.lpushAsync  = promisify(redisClient.lpush).bind(redisClient);
+  redisClient.lpushAsync = promisify(redisClient.lpush).bind(redisClient);
   redisClient.lrangeAsync = promisify(redisClient.lrange).bind(redisClient);
-  redisClient.llenAsync   = promisify(redisClient.llen).bind(redisClient);
-  redisClient.lremAsync   = promisify(redisClient.lrem).bind(redisClient);
-  redisClient.lsetAsync   = promisify(redisClient.lset).bind(redisClient);
+  redisClient.llenAsync = promisify(redisClient.llen).bind(redisClient);
+  redisClient.lremAsync = promisify(redisClient.lrem).bind(redisClient);
+  redisClient.lsetAsync = promisify(redisClient.lset).bind(redisClient);
 
   redisClient.on("error", function (err) {
     console.error("Redis rrror " + err);
@@ -41,8 +41,8 @@ const start = async () => {
 };
 
 process.on('unhandledRejection', (err) => {
-    console.error(err);
-    process.exit(1);
+  console.error(err);
+  process.exit(1);
 });
 
 start();

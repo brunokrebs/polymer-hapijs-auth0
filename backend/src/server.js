@@ -15,10 +15,10 @@ module.exports = async (serverOptions, options) => {
       host: 'localhost',
       routes: {
         cors: {
-          origin: ['*']
-        }
-      }
-    }, serverOptions)
+          origin: ['*'],
+        },
+      },
+    }, serverOptions),
   );
 
   // Redirect to SSL
@@ -35,48 +35,48 @@ module.exports = async (serverOptions, options) => {
     {
       plugin: require('lout'),
       options: {
-        endpoint: '/docs'
-      }
+        endpoint: '/docs',
+      },
     },
     {
       plugin: require('good'),
       options: {
         ops: {
-          interval: 1000
+          interval: 1000,
         },
         reporters: {
           consoleReporter: [
             {
               module: 'good-squeeze',
               name: 'Squeeze',
-              args: [{response: '*'}]
+              args: [{response: '*'}],
             },
             {
-              module: 'good-console'
+              module: 'good-console',
             },
-            'stdout'
+            'stdout',
           ],
-        }
-      }
-    }
+        },
+      },
+    },
   ]);
 
   await server.register(require('hapi-auth-jwt2'));
 
   server.auth.strategy('jwt', 'jwt', {
     complete: true,
-    key: jwksRsa.hapiJwt2Key({
+    key: jwksRsa.hapiJwt2KeyAsync({
       cache: true,
       rateLimit: true,
       jwksRequestsPerMinute: 5,
-      jwksUri: "https://snapkicks.eu.auth0.com/.well-known/jwks.json"
+      jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
     }),
     verifyOptions: {
-      audience: 'http://localhost:3000',
-      issuer: "https://snapkicks.eu.auth0.com/",
-      algorithms: ['RS256']
+      audience: process.env.AUTH0_AUDIENCE,
+      issuer: `https://${process.env.AUTH0_DOMAIN}/`,
+      algorithms: ['RS256'],
     },
-    validate: validateFunc
+    validate: validateFunc,
   });
 
   server.auth.default('jwt');
