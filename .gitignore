@@ -3,3 +3,5 @@ node_modules/
 backend/node_modules/
 website/node_modules/
 website/dist/node_modules/
+.idea/
+backend/.env
