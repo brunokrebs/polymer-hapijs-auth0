@@ -42,7 +42,6 @@ class MyApp extends connect(store)(LitElement) {
         ></my-list>
       </div>
 
-      <script type="text/javascript" src="../../node_modules/auth0-js/build/auth0.js"></script>
     `;
   }
 
